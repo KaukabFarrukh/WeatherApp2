@@ -67,11 +67,14 @@ import kaukab.farrukh.weather.ui.weather.components.WeatherComponent
 import kaukab.farrukh.weather.utils.DateUtil.toFormattedDate
 import java.util.Locale
 import kotlin.random.Random
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 
 @Composable
 fun WeatherScreen(
     modifier: Modifier = Modifier,
     viewModel: WeatherViewModel = hiltViewModel(),
+    navController: NavHostController,
 ) {
     val searchWidgetState by viewModel.searchWidgetState
     val searchTextState by viewModel.searchTextState
@@ -97,7 +100,7 @@ fun WeatherScreen(
                     .padding(paddingValues),
                 color = MaterialTheme.colorScheme.background
             ) {
-                WeatherScreenContent(uiState = uiState, modifier = modifier, viewModel = viewModel)
+                WeatherScreenContent(uiState = uiState, modifier = modifier, viewModel = viewModel, navController = navController)
             }
         },
     )
@@ -108,6 +111,7 @@ fun WeatherScreenContent(
     uiState: WeatherUiState,
     modifier: Modifier = Modifier,
     viewModel: WeatherViewModel?,
+    navController: NavHostController,
 ) {
     when {
         uiState.isLoading -> {
@@ -119,7 +123,9 @@ fun WeatherScreenContent(
         }
 
         else -> {
-            WeatherSuccessState(modifier = modifier, uiState = uiState)
+            WeatherSuccessState(modifier = modifier, uiState = uiState, navController = navController)
+
+
         }
     }
 }
@@ -171,6 +177,7 @@ private fun WeatherErrorState(
 private fun WeatherSuccessState(
     modifier: Modifier,
     uiState: WeatherUiState,
+    navController: NavHostController,
 ) {
     Column(
         modifier = modifier
@@ -326,6 +333,16 @@ private fun WeatherSuccessState(
             }
         }
         Spacer(Modifier.height(16.dp))
+
+        Button(
+            onClick = { navController.navigate("chat") },
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
+        ) {
+            Text(text = "Chat with AI")
+        }
+
     }
 }
 
@@ -363,8 +380,12 @@ fun WeatherScreenContentPreview() {
             )
         )
     }
+
+    val dummyNavController = rememberNavController()
+
     WeatherTheme {
         Surface {
+
             WeatherScreenContent(
                 WeatherUiState(
                     Weather(
@@ -375,10 +396,11 @@ fun WeatherScreenContentPreview() {
                         feelsLike = 18,
                         condition = Condition(10, "", "Cloudy"),
                         uv = 2,
-                        name = "Munich",
+                        name = "Malmo",
                         forecasts = forecasts,
                     ),
-                ), viewModel = null
+                ), viewModel = null,
+                        navController = dummyNavController,
             )
         }
     }

@@ -25,6 +25,9 @@ android {
             useSupportLibrary = true
         }
         buildConfigField("String", "API_KEY", "\"${property("API_KEY")}\"")
+
+        buildConfigField("String", "OPENAI_API_KEY", "\"${property("OPENAI_API_KEY")}\"")
+
     }
 
     buildTypes {
@@ -86,8 +89,18 @@ dependencies {
     implementation(libs.coil)
     implementation(libs.lottie)
     implementation(libs.lifecycle.runtime.compose)
+
+    implementation(libs.navigation.compose)
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
+    implementation("androidx.compose.material:material-icons-extended")
+    implementation("com.google.android.gms:play-services-location:21.3.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+
     testImplementation(libs.mockk)
     testImplementation(libs.turbine)
     testImplementation(libs.androidx.core.testing)
     testImplementation(libs.kotlinx.coroutines.test)
+
 }
